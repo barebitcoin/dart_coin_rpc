@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
+
 import 'Exceptions/http_exception.dart';
 import 'Exceptions/rpc_exception.dart';
 
@@ -75,6 +76,8 @@ class RPCClient {
   }
 
   Future<dynamic> call(var methodName, [var params]) async {
+    params = params ?? [];
+
     final headers = {
       'Content-Type': 'application/json',
       'authorization':
@@ -96,8 +99,8 @@ class RPCClient {
     var body = {
       'jsonrpc': '2.0',
       'method': methodName,
-      'params': params ?? [],
-      'id': '1'
+      'params': params,
+      'id': '1',
     };
 
     try {
@@ -144,7 +147,7 @@ class RPCClient {
                 errorCode: error['code'],
                 errorMsg: error['message'],
                 method: methodName,
-                params: params ?? [],
+                params: params,
               );
             }
             throw HTTPException(
