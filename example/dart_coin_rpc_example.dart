@@ -9,7 +9,6 @@ void main() async {
     useSSL: false,
   );
 
-  var res = await client
-      .call('validateaddress', ["p92W3t7YkKfQEPDb7cG9jQ6iMh7cpKLvwK"]) as Map;
+  var res = await client.call('validateaddress', ["p92W3t7YkKfQEPDb7cG9jQ6iMh7cpKLvwK"]) as Map;
   assert(res["isvalid"] == true);
 }
