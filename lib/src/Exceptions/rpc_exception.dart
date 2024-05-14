@@ -1,7 +1,7 @@
 class RPCException implements Exception {
   int errorCode;
   String errorMsg;
-  String method;
+  String methodName;
   List params;
 
   var errorCodes = {
@@ -47,7 +47,7 @@ class RPCException implements Exception {
   RPCException({
     required this.errorCode,
     required this.errorMsg,
-    required this.method,
+    required this.methodName,
     required this.params,
   });
 
@@ -61,6 +61,6 @@ class RPCException implements Exception {
 
   @override
   String toString() {
-    return '$errorCode : $errorMsg';
+    return '$methodName(${params.toString()}): $errorCode - $errorMsg';
   }
 }
