@@ -80,8 +80,7 @@ class RPCClient {
 
     final headers = {
       'Content-Type': 'application/json',
-      'authorization':
-          'Basic ${base64.encode(utf8.encode('$username:$password'))}'
+      'authorization': 'Basic ${base64.encode(utf8.encode('$username:$password'))}'
     };
     final url = getConnectionString();
 
@@ -123,7 +122,7 @@ class RPCClient {
           throw RPCException(
             errorCode: error['code'],
             errorMsg: error['message'],
-            method: methodName,
+            methodName: methodName,
             params: params,
           );
         }
@@ -138,11 +137,13 @@ class RPCClient {
             throw HTTPException(
               code: 401,
               message: 'Unauthorized',
+              methodName: methodName,
             );
           case 403:
             throw HTTPException(
               code: 403,
               message: 'Forbidden',
+              methodName: methodName,
             );
           case 404:
             if (errorResponseBody['error'] != null) {
@@ -150,13 +151,14 @@ class RPCClient {
               throw RPCException(
                 errorCode: error['code'],
                 errorMsg: error['message'],
-                method: methodName,
+                methodName: methodName,
                 params: params,
               );
             }
             throw HTTPException(
               code: 500,
               message: 'Internal Server Error',
+              methodName: methodName,
             );
           default:
             if (errorResponseBody['error'] != null) {
@@ -164,24 +166,27 @@ class RPCClient {
               throw RPCException(
                 errorCode: error['code'],
                 errorMsg: error['message'],
-                method: methodName,
+                methodName: methodName,
                 params: params,
               );
             }
             throw HTTPException(
               code: 500,
               message: 'Internal Server Error',
+              methodName: methodName,
             );
         }
       } else if (e.type == DioExceptionType.connectionError) {
         throw HTTPException(
           code: 500,
           message: e.message ?? 'Connection Error',
+          methodName: methodName,
         );
       }
       throw HTTPException(
         code: 500,
         message: e.message ?? 'Unknown Error',
+        methodName: methodName,
       );
     }
   }
