@@ -146,35 +146,23 @@ class RPCClient {
               methodName: methodName,
             );
           case 404:
-            if (errorResponseBody['error'] != null) {
-              var error = errorResponseBody['error'];
-              throw RPCException(
-                errorCode: error['code'],
-                errorMsg: error['message'],
-                methodName: methodName,
-                params: params,
-              );
-            }
-            throw HTTPException(
-              code: 500,
-              message: 'Internal Server Error',
-              methodName: methodName,
-            );
+          // go to default
           default:
-            if (errorResponseBody['error'] != null) {
-              var error = errorResponseBody['error'];
+            try {
+              final error = errorResponseBody['error'];
               throw RPCException(
                 errorCode: error['code'],
                 errorMsg: error['message'],
                 methodName: methodName,
                 params: params,
               );
+            } finally {
+              throw HTTPException(
+                code: 500,
+                message: 'Internal Server Error: ${errorResponseBody.toString()}',
+                methodName: methodName,
+              );
             }
-            throw HTTPException(
-              code: 500,
-              message: 'Internal Server Error',
-              methodName: methodName,
-            );
         }
       } else if (e.type == DioExceptionType.connectionError) {
         throw HTTPException(
