@@ -13,6 +13,7 @@ class RPCClient {
   String username;
   String password;
   bool useSSL;
+  bool debug;
   Dio? dioClient;
 
   RPCClient({
@@ -21,6 +22,7 @@ class RPCClient {
     required this.username,
     required this.password,
     required this.useSSL,
+    this.debug = false,
   });
 
   @override
@@ -76,6 +78,8 @@ class RPCClient {
   }
 
   Future<dynamic> call(var methodName, [var params]) async {
+    final stopwatch = Stopwatch()..start();
+
     params = params ?? [];
 
     final headers = {
@@ -176,6 +180,10 @@ class RPCClient {
         message: e.message ?? 'Unknown Error',
         methodName: methodName,
       );
+    } finally {
+      if (debug) {
+        print('$methodName: end, took ${stopwatch.elapsedMilliseconds} ms');
+      }
     }
   }
 }
